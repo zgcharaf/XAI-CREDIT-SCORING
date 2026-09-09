@@ -1,59 +1,52 @@
- 
-# Explainable Credit Scoring Project
+# Explainable Credit Scoring
 
-## Overview
-This project uses machine learning to predict and analyze loan risks. By employing interpertable techniques, we extract insights from loan data and implement segment analysis to identify loan segments with a high proportion of bad loans. The goal is to aid financial institutions in better understanding and managing loan risk.
+An exploratory study of interpretable loan-risk segmentation using decision trees. The notebook combines borrower and loan characteristics with interaction features, then translates tree leaves into rules and examines their share of loans and exposure.
 
-## Features
-- **Loan Risk Prediction**: Predicts the risk associated with loans using a decision tree classifier.
-- **Segment Analysis**: Analyzes different segments of loan data to find the proportion of bad loans, helping pinpoint higher-risk categories.
-- **Visualization**: Provides visualization of the decision tree for a better understanding of the model's decision paths.
+**Start here:** [Main notebook](Main_notebook.ipynb).
 
-## Getting Started
+## What is implemented
 
-### Prerequisites
-- Python 3.x
-- Pandas
-- NumPy
-- Scikit-learn
-- Graphviz for visualization
+- Exploratory distributions, numeric correlations, and categorical associations using Cramér's V.
+- Pairwise numeric interactions and ratios, with exploratory Information Value calculations.
+- One-hot encoding and a 75/25 random train/test split.
+- A decision tree with `max_depth=4` and `min_samples_split=1000`.
+- Graphviz visualization and extraction of if–then rules.
+- Segment summaries by loan count, loan amount, and adverse outcomes; additional experiments filter rules using exposure and risk constraints.
 
-### Installation
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/zgcharaf/XAI-CREDIT-SCORING
-   cd loan-risk-analysis
-   ```
+The notebook treats `loan_status=1` as an adverse outcome in its segment-analysis functions.
 
-2. **Set up a Python virtual environment (optional)**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   ```
+## Repository contents
 
-3. **Install the required packages**
-   ```bash
-   pip install -r requirements.txt
-   ```
+| File | Purpose |
+| --- | --- |
+| [Main_notebook.ipynb](Main_notebook.ipynb) | Exploratory analysis, model fitting, and segmentation experiments. |
+| [credit_risk_dataset.csv](credit_risk_dataset.csv) | Dataset read by the notebook. |
+| [config.pkl](config.pkl) | Existing configuration artifact; the inspected notebook does not load it. |
 
-### Usage
-1. **Prepare your dataset**: Ensure your dataset is in a CSV format and follows the expected schema, make sure to modify the configuration.pql file accordingly. 
+## Open the notebook
 
-2. **Run the analysis**: Execute the main script to train the model and perform segment analysis.
-   ```bash
-   python main.py
-   ```
+```bash
+git clone https://github.com/zgcharaf/XAI-CREDIT-SCORING.git
+cd XAI-CREDIT-SCORING
+python -m venv .venv
+# Activate the environment using the command for your operating system.
+python -m pip install jupyterlab pandas numpy scipy scikit-learn matplotlib seaborn graphviz
+python -m jupyterlab Main_notebook.ipynb
+```
 
-3. **View the results**: Check the output files or terminal output for the analysis results and visualizations.
+Graph rendering also requires the Graphviz system executable. These packages reflect notebook imports; a tested, pinned environment has not yet been supplied.
 
-## Documentation
-Please refer to the folder Documentation.
+Keep the CSV in the repository root. The notebook contains exploratory cells that need reordering or repair before a clean run: an early PairGrid cell references `data` and `FULL_Features` before their definitions, and repeated segmentation helpers use global variables.
 
-## Contact
-- **Project Link**: [https://github.com/zgcharaf/XAI-CREDIT-SCORING/)
-- **Maintainer**: zgcharaf@gmail.com
+## Evaluation status
 
+This is a research notebook, not a validated credit decision system. Feature screening is performed before the train/test split, so the held-out split is not independent of feature selection. Segment summaries describe the supplied dataset; they do not establish out-of-sample risk performance.
 
+Priorities for a reproducible benchmark:
 
+1. Fit preprocessing and feature selection on training data only.
+2. Consolidate the repeated rule/segment functions and validate rules against tree assignments.
+3. Report held-out discrimination, calibration, segment sample sizes, and stability.
+4. Document dataset provenance, target meaning, and feature availability at the intended decision time.
 
-
+No new performance claims are made here.
